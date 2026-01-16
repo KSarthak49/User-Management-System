@@ -3,53 +3,64 @@ import { createContext, useState, useContext, useEffect } from "react";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, SetUser] = useState(null);
+  const [user, setUser] = useState(null);
 
-  // 1. Check if user is already logged in 
   useEffect(() => {
     const storedUser = localStorage.getItem("authUser");
     if (storedUser) {
-      SetUser(JSON.parse(storedUser));
+      setUser(JSON.parse(storedUser));
     }
   }, []);
 
-  // 2.a Signup Logic (NEW)
-  const signup = (email, password) => {
-    // Get existing registered users or empty array
+  // --- SIGNUP (Default new users to 'User' role) ---
+  const signup = (email, password, role = 'User') => {
     const existingUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
     
-    // b.Check if email already exists
     if (existingUsers.find((u) => u.email === email)) {
       return { success: false, message: "Email already exists!" };
     }
 
-    // c.Save new user
-    const newUser = { email, password };
+    const newUser = { email, password, role }; 
     existingUsers.push(newUser);
     localStorage.setItem("registeredUsers", JSON.stringify(existingUsers));
-  
+    
     return { success: true, message: "Account created! Please login." };
   };
 
-  // 3. Login Logic (UPDATED)
+  // --- LOGIN (With Role Logic) ---
   const login = (email, password) => {
-    // a.Special Admin Backdoor 
-    if (email === "admin@demo.com" && password === "123456") {
-      const userData = { email, token: "admin-token" };
-      SetUser(userData);
+    
+    // 1. HARDCODED ROLES FOR TESTING
+    if (email === "admin@test.com" && password === "123456") {
+      const userData = { email, role: 'Admin', token: "admin-token" };
+      setUser(userData);
+      localStorage.setItem("authUser", JSON.stringify(userData));
+      return { success: true };
+    }
+    
+    if (email === "manager@test.com" && password === "123456") {
+      const userData = { email, role: 'Manager', token: "manager-token" };
+      setUser(userData);
       localStorage.setItem("authUser", JSON.stringify(userData));
       return { success: true };
     }
 
-    // b.Check against registered users
+    if (email === "user@test.com" && password === "123456") {
+      const userData = { email, role: 'User', token: "user-token" };
+      setUser(userData);
+      localStorage.setItem("authUser", JSON.stringify(userData));
+      return { success: true };
+    }
+
+    // 2. Check registered users (from Signup)
     const registeredUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
     const validUser = registeredUsers.find(
       (u) => u.email === email && u.password === password
     );
 
     if (validUser) {
-      const userData = { email, token: "user-token-" + Date.now() };
-      SetUser(userData);
+      const userData = { email, role: validUser.role || 'User', token: "jwt-token" };
+      setUser(userData);
       localStorage.setItem("authUser", JSON.stringify(userData));
       return { success: true };
     }
@@ -58,7 +69,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    SetUser(null);
+    setUser(null);
     localStorage.removeItem("authUser");
   };
 
