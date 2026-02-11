@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import UserList from './UserList';
 import UserForm from './UserForm';
-import { useAuth } from '../context/AuthContext'; 
+import { useAuth } from '../context/AuthContext.jsx'; 
 import { PlusCircle, Search, ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
 
 const Dashboard = () => {
