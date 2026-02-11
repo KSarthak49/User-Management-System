@@ -12,8 +12,8 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // --- SIGNUP (Default new users to 'User' role) ---
-  const signup = (email, password, role = 'User') => {
+  // SIGNUP Default new users to 'User' role
+    const signup = (email, password, role = 'User') => {
     const existingUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
     
     if (existingUsers.find((u) => u.email === email)) {
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
     return { success: true, message: "Account created! Please login." };
   };
 
-  // --- LOGIN (With Role Logic) ---
+  // --- LOGIN With Role Logic 
   const login = (email, password) => {
     
     // 1. HARDCODED ROLES FOR TESTING
@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
       return { success: true };
     }
 
-    // 2. Check registered users (from Signup)
+    // 2. Check registered users from Signup
     const registeredUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
     const validUser = registeredUsers.find(
       (u) => u.email === email && u.password === password

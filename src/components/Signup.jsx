@@ -3,6 +3,7 @@ import { useAuth } from "../context/authContext";
 import { useNavigate, Link } from "react-router-dom";
 
 
+import bgImage from '../assets/background.jpg';
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -34,7 +35,14 @@ const Signup = () => {
   };
 
   return (
-    <div className="login-container">
+    <div  className="login-container" 
+          style={{ 
+            backgroundImage: `url(${bgImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }
+        }
+        >
       <div className="login-card">
         <h2>Create Account</h2>
         <p>Sign up to get started</p>

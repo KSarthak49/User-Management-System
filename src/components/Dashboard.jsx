@@ -107,7 +107,9 @@ const Dashboard = () => {
         </div>
 
         <div style={{ display: 'flex', gap: '10px' }}>
+
             {/* ROLE CHECK: Only Admin & Manager see "Add User" */}
+
             {(user?.role === 'Admin' || user?.role === 'Manager') && (
               <button className="btn-primary" onClick={handleAddClick}>
                 <PlusCircle size={20} /> Add User
